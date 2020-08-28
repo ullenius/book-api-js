@@ -10,6 +10,15 @@ function init() {
     var button = document.getElementById("knapp");
     button.addEventListener("click", viewData);
 
+    var removeButton = document.getElementById("removeButton");
+    removeButton.addEventListener("click", function remove() {
+        var id = document.getElementById("remove").value;
+        if (id) {
+            id = Number(id);
+            removeBook( { id } );
+        }
+    });
+
     var addButton = document.getElementById("addButton");
     addButton.addEventListener("click", function readInput() {
 
@@ -42,6 +51,11 @@ function viewUrl() {
 
 function authUrl() {
     return `${BASE}key=${key}`;
+}
+
+function removeUrl(id) {
+    var base = authUrl();
+    return `${base}&op=delete&id=${id}`;
 }
 
 function addUrl({
@@ -125,25 +139,55 @@ function viewData( { counter : attempts = 1 } ) {
                 });
             });
         } else {
-
             console.log("Failed! ", status);
             console.log("Message: ", message);
             retry( { func : viewData, attempts } );
         }
+    });
+}
 
+function removeBook({ counter : attempts = 1, id } ) {
+
+    const url = removeUrl(id);
+
+    console.log("url ", url);
+    fetch(url)
+
+    .then( function parseJSON(response) {
+
+        return response.json();
+    })
+
+    .then(function printData(data) {
+
+        var {
+            status,
+            message
+            } = data;
+        if (status === "success") {
+            console.log(`Attempts: ${attempts}`);
+            console.log(`Successfully deleted ${id}`);
+        } else {
+            console.log("Failed! ", status);
+            console.log("Message: ", message);
+            retry( { func : removeBook, attempts, id } );
+        }
     });
 }
 
 function retry({
     attempts,
     func,
-    book
+    book,
+    id
     } ) {
+    const DELAY = 5000;
+
         if (attempts <= 10) {
            console.log(`Attempt ${attempts} failed.`);
-           console.log("Trying again in 5 seconds");
+           console.log(`Trying again in ${DELAY/1000} seconds`);
            attempts = attempts + 1;
-           setTimeout(func, 5000, { counter: attempts, book });
+           setTimeout(func, 5000, { counter: attempts, book, id });
         }
 }
 
