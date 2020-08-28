@@ -11,7 +11,17 @@ function init() {
     button.addEventListener("click", viewData);
 
     var addButton = document.getElementById("addButton");
-    addButton.addEventListener("click", addBook);
+    addButton.addEventListener("click", function readInput() {
+
+        var author = document.getElementById("author");
+        var title = document.getElementById("title");
+        var book = {
+            author: author.value,
+            title: title.value
+        };
+        console.log(book);
+        addBook(book);
+    });
 
     key = localStorage.getItem("book-api");
 
@@ -47,13 +57,9 @@ function addUrl({
     return `${base}&op=insert&title=${title}&author=${author}`;
 }
 
-function addBook() {
+function addBook(book) {
     
-    var url = addUrl(
-        {
-            title : "Röda Rummet",
-            author: "Strindberg"
-        });
+    var url = addUrl(book);
 
     console.log("url: ", url);
 
