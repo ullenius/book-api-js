@@ -89,7 +89,7 @@ function addBook(book) {
     });
 }
 
-function viewData() {
+function viewData( { counter : attempts = 1 } ) {
 
     const url = viewUrl();
 
@@ -110,6 +110,8 @@ function viewData() {
 
         if (status === "success") {
 
+            console.log(`Attempts: ${attempts}`);
+
             displayList(books);
             console.log("Length of books array: ", books.length);
             books.forEach( function print(book) {
@@ -123,6 +125,14 @@ function viewData() {
 
             console.log("Failed! ", status);
             console.log("Message: ", message);
+
+            if (attempts <= 10) {
+                console.log(`Attempt ${attempts} failed.`);
+                console.log("Trying again in 5 seconds");
+                attempts = attempts + 1;
+                setTimeout(viewData, 5000, { counter: attempts });
+            }
+
         }
 
     });
