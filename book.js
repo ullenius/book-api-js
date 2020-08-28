@@ -110,6 +110,7 @@ function viewData() {
 
         if (status === "success") {
 
+            displayList(books);
             console.log("Length of books array: ", books.length);
             books.forEach( function print(book) {
 
@@ -153,5 +154,25 @@ function fetchKey() {
 
 }
 
+function displayList(books) {
+
+    var list = document.getElementById("booklist");
+
+    books.forEach(function display(book) {
+
+        var {
+            id,
+            title,
+            author,
+            updated
+        } = book;
+
+        var li = document.createElement("li");
+        var text = document.createTextNode(
+        `id: ${id} title: ${title} author: ${author} updated: ${updated}`);
+        li.appendChild(text);
+        list.appendChild(li);
+    });
+}
 
 window.onload = init;
