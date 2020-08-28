@@ -37,9 +37,14 @@ function authUrl() {
 function addUrl({
     title,
     author } ) {
+    
+    title = encodeURIComponent(title);
+    author = encodeURIComponent(author);
+    console.log(title);
+    console.log(author);
 
     var base = authUrl();
-    return `${base}&op=add&title=${title}&author=${author}`;
+    return `${base}&op=insert&title=${title}&author=${author}`;
 }
 
 function addBook() {
@@ -49,7 +54,33 @@ function addBook() {
             title : "Röda Rummet",
             author: "Strindberg"
         });
-    console.log(url);
+
+    console.log("url: ", url);
+
+    fetch(url)
+
+    .then( function parseJSON(response) {
+
+        return response.json();
+    })
+
+    .then(function printResponse(data) {
+
+        var {
+            status,
+            id,
+            message,
+        } = data;
+
+        if (status === "success") {
+
+            console.log(`id: ${id}`);
+            console.log(`message: ${message}`);
+        }
+        else {
+            console.log("Fail :(", message);
+        }
+    });
 }
 
 function viewData() {
