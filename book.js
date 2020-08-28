@@ -20,7 +20,7 @@ function init() {
             title: title.value
         };
         console.log(book);
-        addBook(book);
+        addBook( { book } );
     });
 
     key = localStorage.getItem("book-api");
@@ -57,10 +57,11 @@ function addUrl({
     return `${base}&op=insert&title=${title}&author=${author}`;
 }
 
-function addBook(book) {
+function addBook( { counter: attempts = 1, book } ) {
+
+    console.log(`addBook... counter = ${attempts} book = ${book}`);
     
     var url = addUrl(book);
-
     console.log("url: ", url);
 
     fetch(url)
@@ -84,7 +85,9 @@ function addBook(book) {
             console.log(`id: ${id}`);
         }
         else {
-            console.log("Fail :(", message);
+            console.log("Failed! ", status);
+            console.log("Message: ", message);
+            retry( { func: addBook, attempts, book } );
         }
     });
 }
@@ -133,18 +136,18 @@ function viewData( { counter : attempts = 1 } ) {
 
 function retry({
     attempts,
-    func
+    func,
+    book
     } ) {
         if (attempts <= 10) {
            console.log(`Attempt ${attempts} failed.`);
            console.log("Trying again in 5 seconds");
            attempts = attempts + 1;
-           setTimeout(func, 5000, { counter: attempts });
+           setTimeout(func, 5000, { counter: attempts, book });
         }
 }
 
-
-function fetchKey() {
+function fetchKey( { counter: attempts = 1 } ) {
 
     fetch(requestKeyUrl)
 
@@ -164,7 +167,12 @@ function fetchKey() {
             localStorage.setItem("book-api", key);
             console.log(key);
             return key;
+        } else {
+            console.log("Failed! ", status);
+            console.log("Message: ", message);
+            retry( { func : fetchKey, attempts } );
         }
+
     });
 
 }
