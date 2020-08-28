@@ -48,22 +48,19 @@ function viewData() {
         var {
             status,
             message,
-            data : [
-                    {
-                        id,
-                        title,
-                        author,
-                        updated
-                    } = {}
-             ] = []
+            data : books = []
         } = data;
 
         if (status === "success") {
 
-            console.log(`id: ${id}`);
-            console.log(`title: ${title}`);
-            console.log(`author: ${author}`);
-            console.log(`updated: ${updated}`);
+            console.log("Length of books array: ", books.length);
+            books.forEach( function print(book) {
+
+                var keys = Object.keys(book);
+                keys.forEach(function display(key) {
+                    console.log(`${key}: ${book[key]}`);
+                });
+            });
         } else {
 
             console.log("Failed! ", status);
