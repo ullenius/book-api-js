@@ -1,0 +1,23 @@
+body {
+	background-color: #b6b6ff;
+	font-family:'DejaVu Sans', Helvetica, Arial, sans-serif;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+button {
+    font-family: inherit;
+    text-transform: uppercase;
+    padding: 2em;
+    border: 0px;
+}
+
+button:hover {
+    background-color: #7f007f;
+    cursor: pointer;
+}
+
+input {
+    padding: 1em;
+    margin: 1em;
+}

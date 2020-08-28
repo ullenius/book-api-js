@@ -74,8 +74,8 @@ function addBook() {
 
         if (status === "success") {
 
+            console.log(`status: ${status}`);
             console.log(`id: ${id}`);
-            console.log(`message: ${message}`);
         }
         else {
             console.log("Fail :(", message);
