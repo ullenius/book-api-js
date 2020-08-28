@@ -10,6 +10,9 @@ function init() {
     var button = document.getElementById("knapp");
     button.addEventListener("click", viewData);
 
+    var addButton = document.getElementById("addButton");
+    addButton.addEventListener("click", addBook);
+
     key = localStorage.getItem("book-api");
 
     if (!key) {
@@ -31,6 +34,23 @@ function authUrl() {
     return `${BASE}key=${key}`;
 }
 
+function addUrl({
+    title,
+    author } ) {
+
+    var base = authUrl();
+    return `${base}&op=add&title=${title}&author=${author}`;
+}
+
+function addBook() {
+    
+    var url = addUrl(
+        {
+            title : "Röda Rummet",
+            author: "Strindberg"
+        });
+    console.log(url);
+}
 
 function viewData() {
 
