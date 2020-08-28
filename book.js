@@ -34,7 +34,9 @@ function authUrl() {
 
 function viewData() {
 
-    fetch(viewRequest)
+    const url = viewUrl();
+
+    fetch(url)
 
     .then( function parseJSON(response) {
 
