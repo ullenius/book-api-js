@@ -125,19 +125,24 @@ function viewData( { counter : attempts = 1 } ) {
 
             console.log("Failed! ", status);
             console.log("Message: ", message);
-
-            if (attempts <= 10) {
-                console.log(`Attempt ${attempts} failed.`);
-                console.log("Trying again in 5 seconds");
-                attempts = attempts + 1;
-                setTimeout(viewData, 5000, { counter: attempts });
-            }
-
+            retry( { func : viewData, attempts } );
         }
 
     });
-
 }
+
+function retry({
+    attempts,
+    func
+    } ) {
+        if (attempts <= 10) {
+           console.log(`Attempt ${attempts} failed.`);
+           console.log("Trying again in 5 seconds");
+           attempts = attempts + 1;
+           setTimeout(func, 5000, { counter: attempts });
+        }
+}
+
 
 function fetchKey() {
 
