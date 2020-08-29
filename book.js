@@ -153,12 +153,10 @@ function updateBook( { counter: attempts = 1, book } ) {
 }
 
 function viewData( { counter : attempts = 1 } ) {
-    console.log(`viewData... counter = ${attempts}`);
 
     var url = viewUrl();
 
     fetch(url)
-
     .then( function parseJSON(response) {
         return response.json();
     })
@@ -172,27 +170,23 @@ function viewData( { counter : attempts = 1 } ) {
 
         if (status === "success") {
             displayList(books);
-            console.log("Length of books array: ", books.length);
         } else {
-            console.log("Failed! ", status);
-            console.log("Message: ", message);
+            displayMessage( { status, message, attempts } );
             retry( { func : viewData, attempts } );
         }
     });
 }
 
 function removeBook({ counter : attempts = 1, id } ) {
+    console.log(`removeBook... counter = ${attempts}`);
 
-    const url = removeUrl(id);
+    var url = removeUrl(id);
 
-    console.log("url ", url);
     fetch(url)
 
     .then( function parseJSON(response) {
-
         return response.json();
     })
-
     .then(function printData(data) {
 
         var {
@@ -200,7 +194,6 @@ function removeBook({ counter : attempts = 1, id } ) {
             message
             } = data;
         if (status === "success") {
-            console.log(`Attempts: ${attempts}`);
             console.log(`Successfully deleted ${id}`);
         } else {
             console.log("Failed! ", status);
@@ -241,19 +234,29 @@ function fetchKey( { counter: attempts = 1 } ) {
             key
         } = data;
 
-        console.log("status ", status);
+        displayMessage( { status } );
         if (status === "success") {
             localStorage.setItem("book-api", key);
-            console.log(key);
             return key;
         } else {
-            console.log("Failed! ", status);
-            console.log("Message: ", message);
+            displayMessage( { status, message } );
             retry( { func : fetchKey, attempts } );
         }
 
     });
+}
 
+function displayMessage( { attempts, status, message } ) {
+
+    var messageBox = document.getElementById("message");
+    var attemptBox = document.getElementById("attempts");
+
+    if (status || message) {
+        messageBox.textContent = `Status: ${status} Message: ${message}`;
+    }
+    if (attempts) {
+        attemptBox.textContent = `Attempts: ${attempts}`;
+    }
 }
 
 function displayList(books) {
