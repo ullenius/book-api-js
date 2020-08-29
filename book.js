@@ -2,7 +2,7 @@
 
 const BASE = "https://www.forverkliga.se/JavaScript/api/crud.php?";
 const requestKeyUrl = `${BASE}requestKey`;
-var key;
+const API_KEY = "book-api";
 
 function init() {
 
@@ -49,15 +49,18 @@ function init() {
         updateBook( { book } );
     });
 
-    key = localStorage.getItem("book-api");
+    var key = loadCachedKey();
 
     if (!key) {
-        key = fetchKey();
+        fetchKey();
     } else {
         console.log(`Cached key: ${key}`);
-        console.log("view url", viewUrl());
     }
+}
 
+function loadCachedKey() {
+    var cache = localStorage.getItem(API_KEY);
+    return cache;
 }
 
 function viewUrl() {
@@ -67,6 +70,7 @@ function viewUrl() {
 }
 
 function authUrl() {
+    var key = loadCachedKey();
     return `${BASE}key=${key}`;
 }
 
@@ -209,7 +213,9 @@ function retry({
         }
 }
 
-function fetchKey( { counter: attempts = 1 } ) {
+function fetchKey({
+    counter: attempts = 1
+    } = {} ) {
 
     fetch(requestKeyUrl)
 
@@ -226,8 +232,8 @@ function fetchKey( { counter: attempts = 1 } ) {
 
         displayMessage( { status } );
         if (status === "success") {
-            localStorage.setItem("book-api", key);
-            return key;
+            console.log("successful key fethc... ", key);
+            localStorage.setItem(API_KEY, key);
         } else {
             displayMessage( { status, message } );
             retry( { func : fetchKey, attempts } );
