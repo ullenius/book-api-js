@@ -10,14 +10,22 @@ button {
     text-transform: uppercase;
     padding: 2em;
     border: 0px;
+    margin: 0.5em;
+    font-weight: bold;
 }
 
 button:hover {
     background-color: #7f007f;
     cursor: pointer;
+    color: #000000;
 }
 
 input {
     padding: 1em;
+    margin: 1em;
+}
+
+.box {
+    border: 2px solid #000000;
     margin: 1em;
 }
