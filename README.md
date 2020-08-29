@@ -4,6 +4,9 @@ Book Database API web app.
 
 Client CRUD web app for the [Forverkliga Database API](https://www.forverkliga.se/JavaScript/api/crud.php). It simulates a poorly designed Book Database API with CRUD-functionality.
 
+## Screenshot
+![Screenshot of app listing 4 books](screenshot.png)
+
 ## Summary of API
 
 1. The API has a high likelihood of failing. On every operation.
