@@ -2,7 +2,9 @@
 
 Book Database API web app.
 
-Client CRUD web app for the [Forverkliga Database API](https://www.forverkliga.se/JavaScript/api/crud.php). It simulates a poorly designed Book Database API with CRUD-functionality.
+Client CRUD web app for the i
+[Forverkliga Database API](https://www.forverkliga.se/JavaScript/api/crud.php).
+It simulates a poorly designed Book Database API with CRUD-functionality.
 
 ## Screenshot
 ![Screenshot of app listing 4 books](screenshot.png)
@@ -11,7 +13,7 @@ Client CRUD web app for the [Forverkliga Database API](https://www.forverkliga.s
 
 1. The API has a high likelihood of failing. On every operation.
 2. The API returns `HTTP 200` on every operation
-3. The API returns a JSON but the MIME-type is erroneously set to `text/html`.
+3. The API returns a `JSON` but the MIME-type is erroneously set to `text/html`.
 4. The API accepts only query-parameters.
 5. Only `GET` is used.
 
@@ -25,7 +27,8 @@ Client CRUD web app for the [Forverkliga Database API](https://www.forverkliga.s
   * Delete data
 
 ## Get Started
-Disable CORS in your browser (CORS everywhere extension) or launch a simple Python webserver in the app's root folder:
+Disable CORS in your browser (CORS everywhere extension) or launch a simple 
+Python webserver in the app's root folder:
 
 ~~~sh
 $ python -m SimpleHTTPServer 8080
