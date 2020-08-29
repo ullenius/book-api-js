@@ -6,7 +6,6 @@ var key;
 
 function init() {
 
-    var app = document.getElementById("app");
     var button = document.getElementById("knapp");
     button.addEventListener("click", viewData);
 
@@ -28,7 +27,6 @@ function init() {
             author: author.value,
             title: title.value
         };
-        console.log(book);
         addBook( { book } );
     });
 
@@ -222,6 +220,7 @@ function fetchKey( { counter: attempts = 1 } ) {
 
         var {
             status,
+            message,
             key
         } = data;
 
