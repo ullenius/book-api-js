@@ -165,6 +165,7 @@ function viewData( { counter : attempts = 1 } ) {
         } = data;
 
         if (status === "success") {
+            displayMessage( { status, attempts } );
             displayList(books);
         } else {
             displayMessage( { status, message, attempts } );
@@ -236,17 +237,18 @@ function fetchKey( { counter: attempts = 1 } ) {
     });
 }
 
-function displayMessage( { attempts, status, message } ) {
+function displayMessage({
+    attempts : attempts = "",
+    status: status = "",
+    message: message = "" } ) {
 
+    var statusBox = document.getElementById("status");
     var messageBox = document.getElementById("message");
     var attemptBox = document.getElementById("attempts");
 
-    if (status || message) {
-        messageBox.textContent = `Status: ${status} Message: ${message}`;
-    }
-    if (attempts) {
-        attemptBox.textContent = `Attempts: ${attempts}`;
-    }
+    statusBox.textContent = status;
+    messageBox.textContent = message;
+    attemptBox.textContent = attempts;
 }
 
 function displayList(books) {
