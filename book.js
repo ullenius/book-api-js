@@ -83,10 +83,8 @@ function addUrl({
     
     title = encodeURIComponent(title);
     author = encodeURIComponent(author);
-    console.log(title);
-    console.log(author);
-
     var base = authUrl();
+
     return `${base}&op=insert&title=${title}&author=${author}`;
 }
 
@@ -104,17 +102,13 @@ function updateUrl({
 function addBook( { counter: attempts = 1, book } ) {
 
     console.log(`addBook... counter = ${attempts} book = ${book}`);
-    
     var url = addUrl(book);
-    console.log("url: ", url);
 
     fetch(url)
 
     .then( function parseJSON(response) {
-
         return response.json();
     })
-
     .then(function printResponse(data) {
         var {
             status,
@@ -122,12 +116,11 @@ function addBook( { counter: attempts = 1, book } ) {
             message,
         } = data;
 
+        console.log(`status: ${status}`);
         if (status === "success") {
-            console.log(`status: ${status}`);
             console.log(`id: ${id}`);
         }
         else {
-            console.log("Failed! ", status);
             console.log("Message: ", message);
             retry( { func: addBook, attempts, book } );
         }
@@ -160,16 +153,15 @@ function updateBook( { counter: attempts = 1, book } ) {
 }
 
 function viewData( { counter : attempts = 1 } ) {
+    console.log(`viewData... counter = ${attempts}`);
 
-    const url = viewUrl();
+    var url = viewUrl();
 
     fetch(url)
 
     .then( function parseJSON(response) {
-
         return response.json();
     })
-
     .then(function printData(data) {
 
         var {
@@ -179,18 +171,8 @@ function viewData( { counter : attempts = 1 } ) {
         } = data;
 
         if (status === "success") {
-
-            console.log(`Attempts: ${attempts}`);
-
             displayList(books);
             console.log("Length of books array: ", books.length);
-            books.forEach( function print(book) {
-
-                var keys = Object.keys(book);
-                keys.forEach(function display(key) {
-                    console.log(`${key}: ${book[key]}`);
-                });
-            });
         } else {
             console.log("Failed! ", status);
             console.log("Message: ", message);
