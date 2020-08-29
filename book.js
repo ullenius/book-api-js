@@ -232,7 +232,7 @@ function fetchKey({
 
         displayMessage( { status } );
         if (status === "success") {
-            console.log("successful key fethc... ", key);
+            console.log("successful key fetch... ", key);
             localStorage.setItem(API_KEY, key);
         } else {
             displayMessage( { status, message } );
