@@ -101,7 +101,6 @@ function updateUrl({
 
 function addBook( { counter: attempts = 1, book } ) {
 
-    console.log(`addBook... counter = ${attempts} book = ${book}`);
     var url = addUrl(book);
 
     fetch(url)
@@ -116,19 +115,17 @@ function addBook( { counter: attempts = 1, book } ) {
             message,
         } = data;
 
-        console.log(`status: ${status}`);
         if (status === "success") {
-            console.log(`id: ${id}`);
+            displayMessage( { message: id, status, attempts } );
         }
         else {
-            console.log("Message: ", message);
+            displayMessage( { message, status, attempts } );
             retry( { func: addBook, attempts, book } );
         }
     });
 }
 
 function updateBook( { counter: attempts = 1, book } ) {
-    console.log(`updateBook... counter = ${attempts}`);
     var url = updateUrl(book);
 
     fetch(url)
@@ -142,11 +139,10 @@ function updateBook( { counter: attempts = 1, book } ) {
         } = data;
 
         if (status === "success") {
-            console.log(`status: ${status}`);
+            displayMessage( { status, attempts } );
         }
         else {
-            console.log(`status: ${status}`);
-            console.log(`message: ${message}`);
+            displayMessage( { message, status, attempts } );
             retry( { func: updateBook, attempts, book } );
         }
     });
@@ -178,7 +174,6 @@ function viewData( { counter : attempts = 1 } ) {
 }
 
 function removeBook({ counter : attempts = 1, id } ) {
-    console.log(`removeBook... counter = ${attempts}`);
 
     var url = removeUrl(id);
 
@@ -194,10 +189,9 @@ function removeBook({ counter : attempts = 1, id } ) {
             message
             } = data;
         if (status === "success") {
-            console.log(`Successfully deleted ${id}`);
+            displayMessage( { status, message: `Deleted ${id}`, attempts } );
         } else {
-            console.log("Failed! ", status);
-            console.log("Message: ", message);
+            displayMessage( { status, message, attempts } );
             retry( { func : removeBook, attempts, id } );
         }
     });
@@ -209,13 +203,10 @@ function retry({
     book,
     id
     } ) {
-    const DELAY = 5000;
-
+        const DELAY = 5000;
         if (attempts <= 10) {
-           console.log(`Attempt ${attempts} failed.`);
-           console.log(`Trying again in ${DELAY/1000} seconds`);
            attempts = attempts + 1;
-           setTimeout(func, DELAY, { counter: attempts, book, id });
+           setTimeout(func, DELAY, { counter: attempts, book, id } );
         }
 }
 
@@ -224,10 +215,9 @@ function fetchKey( { counter: attempts = 1 } ) {
     fetch(requestKeyUrl)
 
     .then( function parseJSON(response) {
-
         return response.json();
-
-    }).then(function print(data) {
+        })
+    .then(function print(data) {
 
         var {
             status,
