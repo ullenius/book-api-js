@@ -32,6 +32,25 @@ function init() {
         addBook( { book } );
     });
 
+    var updateButton = document.getElementById("update");
+    updateButton.addEventListener("click", function readInput() {
+        var author = document.getElementById("author");
+        var title = document.getElementById("title");
+        var id = document.getElementById("remove");
+
+        id = id.value.trim();
+        if (id.length === 0 ) {
+            alert("Id field required!");
+        }
+
+        var book = {
+            id: id.value,
+            author: author.value,
+            title: title.value
+        };
+        console.log(book);
+    });
+
     key = localStorage.getItem("book-api");
 
     if (!key) {
@@ -187,7 +206,7 @@ function retry({
            console.log(`Attempt ${attempts} failed.`);
            console.log(`Trying again in ${DELAY/1000} seconds`);
            attempts = attempts + 1;
-           setTimeout(func, 5000, { counter: attempts, book, id });
+           setTimeout(func, DELAY, { counter: attempts, book, id });
         }
 }
 
@@ -224,6 +243,7 @@ function fetchKey( { counter: attempts = 1 } ) {
 function displayList(books) {
 
     var list = document.getElementById("booklist");
+    list.innerHTML = "";
 
     books.forEach(function display(book) {
 
