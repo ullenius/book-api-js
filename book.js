@@ -44,11 +44,11 @@ function init() {
         }
 
         var book = {
-            id: id.value,
+            id: id,
             author: author.value,
             title: title.value
         };
-        console.log(book);
+        updateBook( { book } );
     });
 
     key = localStorage.getItem("book-api");
@@ -90,6 +90,17 @@ function addUrl({
     return `${base}&op=insert&title=${title}&author=${author}`;
 }
 
+function updateUrl({
+    id,
+    title,
+    author } ) {
+
+    title = encodeURIComponent(title);
+    author = encodeURIComponent(author);
+    var base = authUrl();
+    return `${base}&op=update&id=${id}&title=${title}&author=${author}`;
+}
+
 function addBook( { counter: attempts = 1, book } ) {
 
     console.log(`addBook... counter = ${attempts} book = ${book}`);
@@ -105,7 +116,6 @@ function addBook( { counter: attempts = 1, book } ) {
     })
 
     .then(function printResponse(data) {
-
         var {
             status,
             id,
@@ -113,7 +123,6 @@ function addBook( { counter: attempts = 1, book } ) {
         } = data;
 
         if (status === "success") {
-
             console.log(`status: ${status}`);
             console.log(`id: ${id}`);
         }
@@ -121,6 +130,31 @@ function addBook( { counter: attempts = 1, book } ) {
             console.log("Failed! ", status);
             console.log("Message: ", message);
             retry( { func: addBook, attempts, book } );
+        }
+    });
+}
+
+function updateBook( { counter: attempts = 1, book } ) {
+    console.log(`updateBook... counter = ${attempts}`);
+    var url = updateUrl(book);
+
+    fetch(url)
+    .then( function parseJSON(response) {
+        return response.json();
+    })
+    .then(function printResponse(data) {
+        var {
+            status,
+            message
+        } = data;
+
+        if (status === "success") {
+            console.log(`status: ${status}`);
+        }
+        else {
+            console.log(`status: ${status}`);
+            console.log(`message: ${message}`);
+            retry( { func: updateBook, attempts, book } );
         }
     });
 }
