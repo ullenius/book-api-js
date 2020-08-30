@@ -1,15 +1,14 @@
 # Book Database Web App
-
-Book Database API web app.
+Lets you view, create, delete and update books in a remote book database.
 
 Client CRUD web app for the 
 [Forverkliga Database API](https://www.forverkliga.se/JavaScript/api/crud.php).
-It simulates a poorly designed Book Database API with CRUD-functionality.
 
 ## Screenshot
 ![Screenshot of app listing 4 books](screenshot.png)
 
 ## Summary of API
+The *API* itself simulates a poorly designed Book Database API with CRUD-functionality.
 
 1. The API has a high likelihood of failing. On every operation.
 2. The API returns `HTTP 200` on every operation
