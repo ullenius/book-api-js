@@ -235,7 +235,7 @@ function fetchKey({
             console.log("successful key fetch... ", key);
             localStorage.setItem(API_KEY, key);
         } else {
-            displayMessage( { status, message } );
+            displayMessage( { status, message, attempts } );
             retry( { func : fetchKey, attempts } );
         }
 
