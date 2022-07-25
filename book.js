@@ -157,10 +157,7 @@ function viewData( { counter : attempts = 1 } ) {
             } );
         return data;
     })
-    .then(function success( data ) {
-        var { status } = data || {};
-        return status == "success" ? data : Promise.reject(data);
-    })
+    .then(isSuccessful)
     .then(function displayBooks(data) {
         var { data : books = [] } = data;
         displayList(books);
@@ -187,6 +184,11 @@ function removeBook({ counter : attempts = 1, id } ) {
             retry( { func : removeBook, attempts, id } );
         }
     });
+}
+
+function isSuccessful( data ) {
+    var { status } = data || {};
+    return status == "success" ? data : Promise.reject(data);
 }
 
 function retry({
