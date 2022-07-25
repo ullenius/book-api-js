@@ -172,17 +172,17 @@ function removeBook({ counter : attempts = 1, id } ) {
 
     fetch(url)
     .then(parseJson)
+    .then(isSuccessful)
     .then(function printData(data) {
         var {
             status,
             message
             } = data;
-        if (status === "success") {
-            displayMessage( { status, message: `Deleted ${id}`, attempts } );
-        } else {
-            displayMessage( { status, message, attempts } );
-            retry( { func : removeBook, attempts, id } );
-        }
+        displayMessage( { status, message: `Deleted ${id}`, attempts } );
+    })
+    .catch(function handle( data ) {
+        displayMessage( { status: data.status, message : data.message, attempts: attempts } );
+        retry( { func : removeBook, attempts, id } );
     });
 }
 
