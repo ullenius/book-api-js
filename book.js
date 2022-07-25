@@ -159,12 +159,7 @@ function viewData( { counter : attempts = 1 } ) {
     })
     .then(function success( data ) {
         var { status } = data || {};
-        if (status == "success") {
-            return data;
-        }
-        else {
-            return Promise.reject(data);
-        }
+        return status == "success" ? data : Promise.reject(data);
     })
     .then(function displayBooks(data) {
         var { data : books = [] } = data;
