@@ -1,11 +1,10 @@
 "use strict";
 
-const BASE = "https://www.forverkliga.se/JavaScript/api/crud.php?";
+const BASE = "http://localhost:8080/?";
 const requestKeyUrl = `${BASE}requestKey`;
 const API_KEY = "book-api";
 
 function init() {
-
     var button = document.getElementById("knapp");
     button.addEventListener("click", viewData);
 
@@ -106,10 +105,7 @@ function addBook( { counter: attempts = 1, book } ) {
     var url = addUrl(book);
 
     fetch(url)
-
-    .then( function parseJSON(response) {
-        return response.json();
-    })
+    .then(parseJson)
     .then(function printResponse(data) {
         var {
             status,
@@ -131,9 +127,7 @@ function updateBook( { counter: attempts = 1, book } ) {
     var url = updateUrl(book);
 
     fetch(url)
-    .then( function parseJSON(response) {
-        return response.json();
-    })
+    .then(parseJson)
     .then(function printResponse(data) {
         var {
             status,
@@ -151,13 +145,10 @@ function updateBook( { counter: attempts = 1, book } ) {
 }
 
 function viewData( { counter : attempts = 1 } ) {
-
     var url = viewUrl();
 
     fetch(url)
-    .then( function parseJSON(response) {
-        return response.json();
-    })
+    .then(parseJson)
     .then(function printData(data) {
 
         var {
@@ -181,10 +172,7 @@ function removeBook({ counter : attempts = 1, id } ) {
     var url = removeUrl(id);
 
     fetch(url)
-
-    .then( function parseJSON(response) {
-        return response.json();
-    })
+    .then(parseJson)
     .then(function printData(data) {
 
         var {
@@ -218,10 +206,7 @@ function fetchKey({
     } = {} ) {
 
     fetch(requestKeyUrl)
-
-    .then( function parseJSON(response) {
-        return response.json();
-        })
+    .then(parseJson)
     .then(function print(data) {
 
         var {
@@ -240,6 +225,10 @@ function fetchKey({
         }
 
     });
+}
+
+function parseJson( response ) {
+    return response.json();
 }
 
 function displayMessage({
