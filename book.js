@@ -63,7 +63,6 @@ function loadCachedKey() {
 }
 
 function viewUrl() {
-
     var base = authUrl();
     return `${base}&op=select`;
 }
@@ -149,23 +148,47 @@ function viewData( { counter : attempts = 1 } ) {
 
     fetch(url)
     .then(parseJson)
+    .then(function display(data) {
+        displayMessage( { 
+            status: data.status,
+            message: data.message,
+            attempts: attempts 
+            } );
+        return data;
+    })
+    .then(function success( data ) {
+        var { status } = data || {};
+        if (status == "success") {
+            return data;
+        }
+        else {
+            reject(data);
+        }
+    })
     .then(function printData(data) {
-
         var {
-            status,
-            message,
             data : books = []
         } = data;
-
-        if (status === "success") {
-            displayMessage( { status, attempts } );
-            displayList(books);
-        } else {
-            displayMessage( { status, message, attempts } );
-            retry( { func : viewData, attempts } );
-        }
+        //displayMessage( { status, attempts } );
+        displayList(books);
+    })
+    .catch(function handle(data) {
+        //displayMessage( { status, message, attempts } );
+        retry( { func : viewData, attempts } );
     });
 }
+
+function display( data ) {
+    displayMessage( data );
+    return data;
+}
+
+
+function isSuccessful( data ) {
+    var status = { status } = data || {};
+    return status == "success";
+}
+
 
 function removeBook({ counter : attempts = 1, id } ) {
 
