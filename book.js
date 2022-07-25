@@ -3,6 +3,7 @@
 const BASE = "http://localhost:8080/?";
 const requestKeyUrl = `${BASE}requestKey`;
 const API_KEY = "book-api";
+var MAX_ATTEMPTS = 10;
 
 function init() {
     var button = document.getElementById("knapp");
@@ -151,7 +152,7 @@ function viewData( { counter : attempts = 1 } ) {
     .then(function display(data) {
         displayMessage( { 
             status: data.status,
-            message: data.message,
+            message: data.message || "",
             attempts: attempts 
             } );
         return data;
@@ -165,39 +166,21 @@ function viewData( { counter : attempts = 1 } ) {
             reject(data);
         }
     })
-    .then(function printData(data) {
-        var {
-            data : books = []
-        } = data;
-        //displayMessage( { status, attempts } );
+    .then(function displayBooks(data) {
+        var { data : books = [] } = data;
         displayList(books);
     })
     .catch(function handle(data) {
-        //displayMessage( { status, message, attempts } );
         retry( { func : viewData, attempts } );
     });
 }
 
-function display( data ) {
-    displayMessage( data );
-    return data;
-}
-
-
-function isSuccessful( data ) {
-    var status = { status } = data || {};
-    return status == "success";
-}
-
-
 function removeBook({ counter : attempts = 1, id } ) {
-
     var url = removeUrl(id);
 
     fetch(url)
     .then(parseJson)
     .then(function printData(data) {
-
         var {
             status,
             message
@@ -218,7 +201,7 @@ function retry({
     id
     } ) {
         const DELAY = 5000;
-        if (attempts <= 10) {
+        if (attempts <= MAX_ATTEMPTS) {
            attempts = attempts + 1;
            setTimeout(func, DELAY, { counter: attempts, book, id } );
         }
@@ -265,7 +248,7 @@ function displayMessage({
 
     statusBox.textContent = status;
     messageBox.textContent = message;
-    attemptBox.textContent = attempts;
+    attemptBox.textContent = `${attempts}/${MAX_ATTEMPTS}`;
 }
 
 function displayList(books) {
