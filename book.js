@@ -163,7 +163,7 @@ function viewData( { counter : attempts = 1 } ) {
             return data;
         }
         else {
-            reject(data);
+            return Promise.reject(data);
         }
     })
     .then(function displayBooks(data) {
