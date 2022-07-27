@@ -168,27 +168,34 @@ function viewData( { counter : attempts = 1 } ) {
 }
 
 function removeBook({ counter : attempts = 1, id } ) {
-    var url = removeUrl(id);
-
-    fetch(url)
-    .then(parseJson)
-    .then(isSuccessful)
-    .then(function printData(data) {
-        var {
-            status,
-            message
-            } = data;
-        displayMessage( { status, message: `Deleted ${id}`, attempts } );
-    })
-    .catch(function handle( data ) {
-        displayMessage( { status: data.status, message : data.message, attempts: attempts } );
-        retry( { func : removeBook, attempts, id } );
+    var it = foo(id, attempts);
+    it.next().value
+    .then(function sendResponse( response ) {
+        it.next(json).value.
+            then(function sendJson( json ) {
+                it.next( json );
+            });
     });
 }
 
-function isSuccessful( data ) {
-    var { status } = data || {};
-    return status == "success" ? data : Promise.reject(data);
+function *foo(id, attempts) {
+    var url = removeUrl(id);
+    var response = yield fetch(url);
+    var data = yield parseJson(response);
+    var {
+        status,
+        message
+    } = data;
+    if (isSuccessful(status)) {
+        displayMessage( { status, message: `Deleted ${id}`, attempts } );
+    } else {
+        displayMessage( { status: data.status, message : data.message, attempts: attempts } );
+        retry( { func : removeBook, attempts, id } );
+    }
+}
+
+function isSuccessful( message ) {
+    return message == "success";
 }
 
 function retry({
