@@ -193,36 +193,30 @@ function retry({
     id
     } ) {
         const DELAY = 5000;
-        if (attempts <= MAX_ATTEMPTS) {
+        if (attempts < MAX_ATTEMPTS) {
            attempts = attempts + 1;
            setTimeout(func, DELAY, { counter: attempts, book, id } );
         }
 }
 
-function fetchKey({
-    counter: attempts = 1
-    } = {} ) {
+async function fetchKey( { counter: attempts = 1 } = {} ) {
+    var response = await fetch(requestKeyUrl);
+    var data = await parseJson( response );
 
-    fetch(requestKeyUrl)
-    .then(parseJson)
-    .then(function print(data) {
+    var {
+        status,
+        message = "",
+        key
+    } = data || {};
 
-        var {
-            status,
-            message,
-            key
-        } = data;
-
-        displayMessage( { status } );
-        if (status === "success") {
-            console.log("successful key fetch... ", key);
-            localStorage.setItem(API_KEY, key);
-        } else {
-            displayMessage( { status, message, attempts } );
-            retry( { func : fetchKey, attempts } );
-        }
-
-    });
+    displayMessage( { status } );
+    if (status === "success") { // FIXME DRY
+        console.log("successful key fetch... ", key);
+        localStorage.setItem(API_KEY, key);
+    } else {
+        displayMessage( { status, message, attempts } );
+        retry( { func : fetchKey, attempts } );
+    }
 }
 
 function parseJson( response ) {
@@ -244,7 +238,6 @@ function displayMessage({
 }
 
 function displayList(books) {
-
     var list = document.getElementById("booklist");
     list.innerHTML = "";
 
