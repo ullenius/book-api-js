@@ -101,7 +101,6 @@ function updateUrl({
 }
 
 async function addBook( { counter: attempts = 1, book } ) {
-
     var url = addUrl(book);
     var response = await fetch(url)
     var data = await parseJson(response);
@@ -143,27 +142,25 @@ function updateBook( { counter: attempts = 1, book } ) {
     });
 }
 
-function viewData( { counter : attempts = 1 } ) {
+async function viewData( { counter : attempts = 1 } ) {
     var url = viewUrl();
 
-    fetch(url)
-    .then(parseJson)
-    .then(function display(data) {
-        displayMessage( { 
-            status: data.status,
-            message: data.message || "",
-            attempts: attempts 
-            } );
-        return data;
-    })
-    .then(isSuccessful)
-    .then(function displayBooks(data) {
+    var response = await fetch(url);
+    var data = await parseJson(response);
+    var {
+        status,
+        message,
+        attempts
+    } = data || {};
+    console.log("viewData: ", data);
+
+    if ( isSuccessful(data) ) {
         var { data : books = [] } = data;
         displayList(books);
-    })
-    .catch(function handle(data) {
+    }
+    else {
         retry( { func : viewData, attempts } );
-    });
+    }
 }
 
 function removeBook({ counter : attempts = 1, id } ) {
@@ -193,8 +190,8 @@ function *foo(id, attempts) {
     }
 }
 
-function isSuccessful( message ) {
-    return message == "success";
+function isSuccessful( { status } = data || {} ) {
+    return status == "success";
 }
 
 function retry({
