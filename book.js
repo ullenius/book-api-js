@@ -146,12 +146,17 @@ async function viewData( { counter : attempts = 1 } ) {
 
     var {
         status,
-        message,
+        message = "",
         attempts
     } = data || {};
     console.log("viewData: ", data);
+    displayMessage( { 
+        status,
+        message,
+        attempts }
+    );
 
-    if ( isSuccessful(data) ) {
+    if ( isSuccessful(data) ) { // FIXME DRY
         var { data : books = [] } = data;
         displayList(books);
     }
@@ -161,25 +166,15 @@ async function viewData( { counter : attempts = 1 } ) {
 }
 
 async function removeBook({ counter : attempts = 1, id } ) {
-    var it = foo(id, attempts);
-    it.next().value
-    .then(function sendResponse( response ) {
-        it.next(json).value.
-            then(function sendJson( json ) {
-                it.next( json );
-            });
-    });
-}
-
-function *foo(id, attempts) {
     var url = removeUrl(id);
-    var response = yield fetch(url);
-    var data = yield parseJson(response);
+    var response = await fetch(url);
+    var data = await parseJson(response);
+
     var {
         status,
         message
     } = data;
-    if (isSuccessful(status)) {
+    if ( isSuccessful(status) ) {
         displayMessage( { status, message: `Deleted ${id}`, attempts } );
     } else {
         displayMessage( { status: data.status, message : data.message, attempts: attempts } );
