@@ -100,27 +100,26 @@ function updateUrl({
     return `${base}&op=update&id=${id}&title=${title}&author=${author}`;
 }
 
-function addBook( { counter: attempts = 1, book } ) {
+async function addBook( { counter: attempts = 1, book } ) {
 
     var url = addUrl(book);
+    var response = await fetch(url)
+    var data = await parseJson(response);
 
-    fetch(url)
-    .then(parseJson)
-    .then(function printResponse(data) {
-        var {
-            status,
-            id,
-            message,
-        } = data;
+    var {
+        status,
+        id,
+        message,
+    } = data;
 
-        if (status === "success") {
-            displayMessage( { message: id, status, attempts } );
-        }
-        else {
-            displayMessage( { message, status, attempts } );
-            retry( { func: addBook, attempts, book } );
-        }
-    });
+    if (status === "success") { // FIXME DRY
+        console.log("debug: ", data);
+        displayMessage( { message: id, status, attempts } );
+    }
+    else {
+        displayMessage( { message, status, attempts } );
+        retry( { func: addBook, attempts, book } );
+    }
 }
 
 function updateBook( { counter: attempts = 1, book } ) {
