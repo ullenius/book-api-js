@@ -121,32 +121,29 @@ async function addBook( { counter: attempts = 1, book } ) {
     }
 }
 
-function updateBook( { counter: attempts = 1, book } ) {
+async function updateBook( { counter: attempts = 1, book } ) {
     var url = updateUrl(book);
+    var response = await fetch(url);
+    var data = await parseJson(response);
 
-    fetch(url)
-    .then(parseJson)
-    .then(function printResponse(data) {
-        var {
-            status,
-            message
-        } = data;
-
-        if (status === "success") {
-            displayMessage( { status, attempts } );
-        }
-        else {
-            displayMessage( { message, status, attempts } );
-            retry( { func: updateBook, attempts, book } );
-        }
-    });
+    var {
+        status,
+        message
+    } = data || {};
+    if (status === "success") { // FIXME DRY
+        displayMessage( { status, attempts } );
+    }
+    else {
+        displayMessage( { message, status, attempts } );
+        retry( { func: updateBook, attempts, book } );
+    }
 }
 
 async function viewData( { counter : attempts = 1 } ) {
     var url = viewUrl();
-
     var response = await fetch(url);
     var data = await parseJson(response);
+
     var {
         status,
         message,
@@ -163,7 +160,7 @@ async function viewData( { counter : attempts = 1 } ) {
     }
 }
 
-function removeBook({ counter : attempts = 1, id } ) {
+async function removeBook({ counter : attempts = 1, id } ) {
     var it = foo(id, attempts);
     it.next().value
     .then(function sendResponse( response ) {
